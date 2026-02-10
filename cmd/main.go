@@ -1,15 +1,24 @@
 package main
 
+import (
+	"log"
+	"os"
+)
 
-type application struct {
-	config config
-}
 
-type config struct {
-	addr string
-	db dbConfig
-}
+func main() {
+	cfg := config{
+		addr: ":8080",
+		db:   dbConfig{},
+	}
 
-type dbConfig struct {
-	dsn string
+	api := application{
+		config: cfg,
+	}
+
+	if err := api.run(api.mount()); err != nil {
+		log.Printf("Serve has failed to start, err: %s", err)
+		os.Exit(1)
+	}
+
 }
