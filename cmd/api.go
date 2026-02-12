@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5"
 	repo "github.com/sebasL200/go-api-ecommerce.git/internal/adapters/postgresql/sqlc"
+	"github.com/sebasL200/go-api-ecommerce.git/internal/orders"
 	"github.com/sebasL200/go-api-ecommerce.git/internal/products"
 )
 
@@ -34,7 +35,12 @@ func (app *application) mount() http.Handler {
 	productService := products.NewService(repo.New(app.db))
 	productHandler := products.NewHandler(productService)
 	r.Get("/products", productHandler.ListProducts)
+	r.Get("/products/{id}", productHandler.GetProduct)
 
+	//PARA LAS ORDENES
+	ordersService := orders.NewService(repo.New(app.db), app.db)
+	ordersHandler := orders.NewHandler(ordersService)
+	r.Post("/orders", ordersHandler.PlaceOrder)
 
 	//http.ListenAndServe(":3333", r)
 
@@ -58,7 +64,7 @@ func (app *application) run(h http.Handler) error {
 
 type application struct {
 	config config
-	db *pgx.Conn
+	db     *pgx.Conn
 }
 
 type config struct {
