@@ -77,7 +77,8 @@ VALUES
 4. **Generar Archivos SQLC:**
 ```powershell
 sqlc generate
-
+si hay un problema despues de poner eso tienes que descargar esto
+go get github.com/jackc/pgx/v5
 ```
 
 
